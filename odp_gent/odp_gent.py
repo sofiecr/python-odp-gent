@@ -139,7 +139,30 @@ class ODPGent:
         for item in locations["records"]:
             results.append(ParkAndRide.from_dict(item))
         return results
+    
+    async def bluebike(self) -> list[Bluebike]:
+        """Get list of bluebike locations.
+        Returns:
+            A list of Bluebike locations.
+        """
+        results: list[Bluebike] = []
 
+        #data is spread over multiple datasets
+        datasets = ["blue-bike-deelfietsen-gent-sint-pieters-st-denijslaan",
+                    "blue-bike-deelfietsen-merelbeke-drongen-wondelgem",
+                    "blue-bike-deelfietsen-gent-sint-pieters-m-hendrikaplein",
+                    "blue-bike-deelfietsen-gent-dampoort"]
+
+        for dataset in datasets:
+            locations = await self._request(
+                "search/",
+                params={"dataset": dataset},
+            )
+
+            for item in locations["records"]:
+                results.append(Bluebike.from_dict(item))
+        return results
+    
     async def close(self) -> None:
         """Close open client session."""
         if self.session and self._close_session:
