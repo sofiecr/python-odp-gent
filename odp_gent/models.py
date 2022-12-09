@@ -136,3 +136,44 @@ class ParkAndRide:
             latitude=geo[1],
             updated_at=datetime.strptime(attr.get("lastupdate"), "%Y-%m-%dT%H:%M:%S%z"),
         )
+
+   
+@dataclass
+class Bluebike:
+    """Object representing a Bluebike location."""
+
+    spot_id: str
+    name: str
+    type: str
+
+    last_seen: datetime
+    bikes_in_use: int
+    bikes_available: int
+
+    longitude: float
+    latitude: float
+
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Bluebike:
+        """Return a Bluebike object from a dictionary.
+
+        Args:
+            data: The data from the API.
+
+        Returns:
+            A Bluebike object.
+        """
+
+        attr = data["fields"]
+        return cls(
+            spot_id=str(data.get("recordid")),
+            name=attr.get("name"),
+            type=attr.get("type"),
+            last_seen=datetime.strptime(attr.get("last_seen"), "%Y-%m-%dT%H:%M:%S%z"),
+            bikes_in_use=attr.get("bikes_in_use"),
+            bikes_available=attr.get("bikes_available"),
+            longitude=attr.get("longitude"),
+            latitude=attr.get("latitude"),
+        )
+
